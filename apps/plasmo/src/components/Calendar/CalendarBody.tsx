@@ -21,7 +21,6 @@ const CalendarBody: React.FC = () => {
         const weeks = processCalendarData(data)
         setCalendarData(weeks)
 
-        // Find today's date and set both selectedDay and todayBSDay
         const today = weeks.flat().find((day) => day.isToday)
         if (today) {
           setSelectedDay(today)
@@ -42,9 +41,7 @@ const CalendarBody: React.FC = () => {
   return (
     <div className="plasmo-bg-gray-900 plasmo-p-4 plasmo-w-full">
       <div className="plasmo-space-y-4">
-        <div data-today-bs-date={todayBSDay}>
-          <DateWithEvents selectedDay={selectedDay} />
-        </div>
+        <DateWithEvents selectedDay={selectedDay} todayBSDay={todayBSDay} />
         <NepaliWeekdays />
         <CalendarGrid
           calendarData={calendarData}

@@ -1,69 +1,27 @@
 import React from "react"
 
+import {
+  calculateDaysDifference,
+  getFormattedDate,
+  getRelativeDayText
+} from "./Calendar/helpers/dateUtils"
 import type { ProcessedDay } from "./Calendar/types/types"
 
 interface DateWithEventsProps {
   selectedDay: ProcessedDay | null
+  todayBSDay: string | null
 }
 
-const DateWithEvents: React.FC<DateWithEventsProps> = ({ selectedDay }) => {
+const DateWithEvents: React.FC<DateWithEventsProps> = ({
+  selectedDay,
+  todayBSDay
+}) => {
   if (!selectedDay || selectedDay.empty) {
     return null
   }
 
-  // Get current date for comparison
-  const today = new Date()
-  const dateObj = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    parseInt(selectedDay.date || "1")
-  )
-  const dayName = dateObj.toLocaleString("en-US", { weekday: "long" })
-  const monthName = dateObj.toLocaleString("en-US", { month: "long" })
-
-  // Function to convert Nepali number string to English number
-  const convertNepaliToEnglish = (nepaliNum: string): number => {
-    const nepaliDigits: { [key: string]: string } = {
-      "०": "0",
-      "१": "1",
-      "२": "2",
-      "३": "3",
-      "४": "4",
-      "५": "5",
-      "६": "6",
-      "७": "7",
-      "८": "8",
-      "९": "9"
-    }
-    return parseInt(
-      nepaliNum
-        .split("")
-        .map((digit) => nepaliDigits[digit] || digit)
-        .join("")
-    )
-  }
-
-  // Calculate days difference using Nepali dates
-  const todayNepaliDate = document
-    .querySelector("[data-today-bs-date]")
-    ?.getAttribute("data-today-bs-date")
-  const selectedNepaliDate = selectedDay.NepaliNum
-
-  let diffDays = 0
-  if (todayNepaliDate && selectedNepaliDate) {
-    const todayNum = convertNepaliToEnglish(todayNepaliDate)
-    const selectedNum = convertNepaliToEnglish(selectedNepaliDate)
-    diffDays = selectedNum - todayNum
-  }
-
-  // Function to get relative day text
-  const getRelativeDayText = (dayDiff: number): string => {
-    if (dayDiff === 0) return "today"
-    if (dayDiff === 1) return "tomorrow"
-    if (dayDiff === -1) return "yesterday"
-    if (dayDiff > 1) return `${dayDiff} days after`
-    return `${Math.abs(dayDiff)} days before`
-  }
+  const { dayName, monthName, year } = getFormattedDate(selectedDay)
+  const diffDays = calculateDaysDifference(todayBSDay, selectedDay.NepaliNum)
 
   return (
     <div className="plasmo-h-[22%] plasmo-w-full plasmo-border plasmo-border-slate-600 plasmo-rounded-lg plasmo-bg-slate-900 plasmo-text-white plasmo-p-4">
@@ -85,7 +43,7 @@ const DateWithEvents: React.FC<DateWithEventsProps> = ({ selectedDay }) => {
         {/* Date Information */}
         <div className="plasmo-flex plasmo-flex-col">
           <div className="plasmo-text-xl">
-            {`${monthName} ${selectedDay.date}, ${today.getFullYear()}`}
+            {`${monthName} ${selectedDay.date}, ${year}`}
           </div>
           <div className="plasmo-text-base plasmo-mt-2">
             {selectedDay.holidayTitle || "Regular Day"}
