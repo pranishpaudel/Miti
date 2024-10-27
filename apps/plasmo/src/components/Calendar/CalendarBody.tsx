@@ -11,19 +11,21 @@ import type { CalendarDayData, ProcessedDay } from "./types/types"
 const CalendarBody: React.FC = () => {
   const [calendarData, setCalendarData] = useState<ProcessedDay[][]>([])
   const [selectedDay, setSelectedDay] = useState<ProcessedDay | null>(null)
+  const [todayBSDay, setTodayBSDay] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        const response = await fetch(MITI_API_ROUTE("2081", "07")) // Fetch data for the month of Kartik ( You need to make this dynamic )
+        const response = await fetch(MITI_API_ROUTE("2081", "07"))
         const data: CalendarDayData[] = await response.json()
         const weeks = processCalendarData(data)
         setCalendarData(weeks)
 
-        // Find and select today's date initially
+        // Find today's date and set both selectedDay and todayBSDay
         const today = weeks.flat().find((day) => day.isToday)
         if (today) {
           setSelectedDay(today)
+          setTodayBSDay(today.NepaliNum || null)
         }
       } catch (error) {
         console.error("Error fetching calendar data:", error)
@@ -40,9 +42,7 @@ const CalendarBody: React.FC = () => {
   return (
     <div className="plasmo-bg-gray-900 plasmo-p-4 plasmo-w-full">
       <div className="plasmo-space-y-4">
-        <div data-today-bs-date="10">
-          {" "}
-          {/* Add today's nepali months day dynamically */}
+        <div data-today-bs-date={todayBSDay}>
           <DateWithEvents selectedDay={selectedDay} />
         </div>
         <NepaliWeekdays />
