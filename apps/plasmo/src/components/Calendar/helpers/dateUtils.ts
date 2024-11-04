@@ -1,5 +1,33 @@
 import type { ProcessedDay } from "../types/types"
 
+// Mapping of Nepali months to approximate Gregorian (English) dates
+const nepaliToEnglishMonthMap: {
+  [key: string]: { month: number; startDay: number; year: number }
+} = {
+  "01": { month: 3, startDay: 14, year: 0 }, // Baisakh starts ~ April 14
+  "02": { month: 4, startDay: 14, year: 0 }, // Jestha starts ~ May 14
+  "03": { month: 5, startDay: 15, year: 0 }, // Ashadh starts ~ June 15
+  "04": { month: 6, startDay: 16, year: 0 }, // Shrawan starts ~ July 16
+  "05": { month: 7, startDay: 17, year: 0 }, // Bhadra starts ~ August 17
+  "06": { month: 8, startDay: 17, year: 0 }, // Ashwin starts ~ September 17
+  "07": { month: 9, startDay: 17, year: 0 }, // Kartik starts ~ October 17
+  "08": { month: 10, startDay: 16, year: 0 }, // Mangsir starts ~ November 16
+  "09": { month: 11, startDay: 16, year: 0 }, // Poush starts ~ December 16
+  "10": { month: 0, startDay: 14, year: 1 }, // Magh starts ~ January 14
+  "11": { month: 1, startDay: 13, year: 1 }, // Falgun starts ~ February 13
+  "12": { month: 2, startDay: 14, year: 1 } // Chaitra starts ~ March 14
+}
+
+// Convert Nepali year to English year
+const getEnglishYear = (nepaliYear: number, nepaliMonth: string): number => {
+  // Base conversion (approximate)
+  const baseEnglishYear = nepaliYear - 57
+
+  // Adjust for months that span into the next year
+  const monthData = nepaliToEnglishMonthMap[nepaliMonth]
+  return baseEnglishYear + (monthData?.year || 0)
+}
+
 export const convertNepaliToEnglish = (nepaliNum: string): number => {
   const nepaliDigits: { [key: string]: string } = {
     "०": "0",
@@ -21,9 +49,11 @@ export const convertNepaliToEnglish = (nepaliNum: string): number => {
   )
 }
 
-// Convert Nepali year, month, day to absolute days
-const getNepaliDays = (year: number, month: number, day: number): number => {
-  // Days in each month of Nepali calendar
+export const getNepaliDays = (
+  year: number,
+  month: number,
+  day: number
+): number => {
   const daysInMonth = {
     1: 31,
     2: 31,
@@ -39,15 +69,12 @@ const getNepaliDays = (year: number, month: number, day: number): number => {
     12: 30
   }
 
-  // Calculate total days
   let days = day
 
-  // Add days for months in the current year
   for (let m = 1; m < month; m++) {
     days += daysInMonth[m as keyof typeof daysInMonth]
   }
 
-  // Add days for years
   days += year * 365
 
   return days
@@ -66,18 +93,15 @@ export const calculateDaysDifference = (
 
   // Get current date from the browser
   const now = new Date()
-  // Convert current date to Nepali year (this is an approximation,
-  // you might want to use a proper Gregorian to Nepali date converter)
+  // Use current Nepali date
   const currentNepaliYear = 2081 // This should be dynamically calculated
   const currentNepaliMonth = 7 // This should be dynamically calculated
 
-  // Calculate days for both dates
   const todayTotalDays = getNepaliDays(
     currentNepaliYear,
     currentNepaliMonth,
     todayDay
   )
-
   const selectedTotalDays = getNepaliDays(
     parseInt(selectedYear),
     parseInt(selectedMonth),
@@ -96,22 +120,38 @@ export const getRelativeDayText = (dayDiff: number): string => {
 }
 
 export const getFormattedDate = (
-  selectedDay: ProcessedDay
+  selectedDay: ProcessedDay,
+  selectedMonth: string,
+  selectedYear: string
 ): {
   dayName: string
   monthName: string
   year: number
 } => {
-  const today = new Date()
+  // Get the mapping for the selected Nepali month
+  const monthMapping = nepaliToEnglishMonthMap[selectedMonth]
+  if (!monthMapping) {
+    return {
+      dayName: "",
+      monthName: "",
+      year: parseInt(selectedYear)
+    }
+  }
+
+  // Convert Nepali date to English date
+  const nepaliDay = convertNepaliToEnglish(selectedDay.NepaliNum || "1")
+  const englishYear = getEnglishYear(parseInt(selectedYear), selectedMonth)
+
+  // Calculate the English date
   const dateObj = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    parseInt(selectedDay.date || "1")
+    englishYear,
+    monthMapping.month,
+    monthMapping.startDay + nepaliDay - 1
   )
 
   return {
     dayName: dateObj.toLocaleString("en-US", { weekday: "long" }),
     monthName: dateObj.toLocaleString("en-US", { month: "long" }),
-    year: today.getFullYear()
+    year: dateObj.getFullYear()
   }
 }

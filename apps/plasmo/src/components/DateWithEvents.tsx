@@ -24,7 +24,11 @@ const DateWithEvents: React.FC<DateWithEventsProps> = ({
     return null
   }
 
-  const { dayName, monthName, year } = getFormattedDate(selectedDay)
+  const { dayName, monthName, year } = getFormattedDate(
+    selectedDay,
+    selectedMonth,
+    selectedYear
+  )
   const diffDays = calculateDaysDifference(
     todayBSDay,
     selectedDay.NepaliNum,
