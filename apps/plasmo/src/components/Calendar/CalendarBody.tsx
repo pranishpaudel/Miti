@@ -55,7 +55,12 @@ const CalendarBody: React.FC = () => {
           onMonthChange={setSelectedMonth}
         />
 
-        <DateWithEvents selectedDay={selectedDay} todayBSDay={todayBSDay} />
+        <DateWithEvents
+          selectedDay={selectedDay}
+          todayBSDay={todayBSDay}
+          selectedYear={selectedYear}
+          selectedMonth={selectedMonth}
+        />
         <NepaliWeekdays />
         <CalendarGrid
           calendarData={calendarData}

@@ -10,18 +10,27 @@ import type { ProcessedDay } from "./Calendar/types/types"
 interface DateWithEventsProps {
   selectedDay: ProcessedDay | null
   todayBSDay: string | null
+  selectedYear: string
+  selectedMonth: string
 }
 
 const DateWithEvents: React.FC<DateWithEventsProps> = ({
   selectedDay,
-  todayBSDay
+  todayBSDay,
+  selectedYear,
+  selectedMonth
 }) => {
   if (!selectedDay || selectedDay.empty) {
     return null
   }
 
   const { dayName, monthName, year } = getFormattedDate(selectedDay)
-  const diffDays = calculateDaysDifference(todayBSDay, selectedDay.NepaliNum)
+  const diffDays = calculateDaysDifference(
+    todayBSDay,
+    selectedDay.NepaliNum,
+    selectedYear,
+    selectedMonth
+  )
 
   return (
     <div className="plasmo-h-[22%] plasmo-w-full plasmo-border plasmo-border-slate-600 plasmo-rounded-lg plasmo-bg-slate-900 plasmo-text-white plasmo-p-4">
