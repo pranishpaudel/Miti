@@ -11,6 +11,9 @@ importers:
       lucide-react:
         specifier: ^0.454.0
         version: 0.454.0(react@18.2.0)
+      nepali-datetime:
+        specifier: ^1.2.1
+        version: 1.2.1
       plasmo:
         specifier: 0.89.3
         version: 0.89.3(@swc/core@1.7.39(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2459,6 +2462,9 @@ packages:
     resolution: {integrity: sha512-6k0YULvhpw+RoLNiQCRKOl09Rv1dPLr8hHnVjHqdolKwDrdNyk+Hmrthi4lIGPPz3r39dLx0hsF5s40sZ3Us4Q==}
     engines: {node: '>= 4.4.x'}
     hasBin: true
+
+  nepali-datetime@1.2.1:
+    resolution: {integrity: sha512-d6nUSYFTGV/Cpzno7IjtH0GzH14wXW5kQgq+UEN894Wb4jSUUYgwhntls90UZoLMoFyRUktOCEV4ZzgvoqfDKg==}
 
   node-abi@3.71.0:
     resolution: {integrity: sha512-SZ40vRiy/+wRTf21hxkkEjPJZpARzUMVcJoQse2EF8qkUWbbO2z7vd5oA/H6bVH6SZQ5STGcu0KRDS7biNRfxw==}
@@ -5807,6 +5813,8 @@ snapshots:
       iconv-lite: 0.6.3
       sax: 1.4.1
     optional: true
+
+  nepali-datetime@1.2.1: {}
 
   node-abi@3.71.0:
     dependencies:
