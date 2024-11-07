@@ -24,6 +24,14 @@ export const convertNepaliToEnglish = (nepaliNum: string): number => {
   )
 }
 
+export const getNepaliMonthAndYear = () => {
+  const currentNepaliDate = new NepaliDate()
+  const currentYear = currentNepaliDate.getYear().toString()
+  const currentMonth = `${currentNepaliDate.getMonth() + 1}`
+    .toString()
+    .padStart(2, "0")
+  return { currentYear, currentMonth }
+}
 export const getNepaliDays = (
   year: number,
   month: number,

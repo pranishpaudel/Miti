@@ -7,6 +7,7 @@ import { CalendarGrid } from "./CalendarGrid"
 import MonthYearSelect from "./CalendarMonthYear"
 import NepaliWeekdays from "./DayIndex"
 import { processCalendarData } from "./helpers/calendarUtils"
+import { getNepaliMonthAndYear } from "./helpers/dateUtils"
 import type { CalendarDayData, ProcessedDay } from "./types/types"
 
 // Import the new component
@@ -15,8 +16,10 @@ const CalendarBody: React.FC = () => {
   const [calendarData, setCalendarData] = useState<ProcessedDay[][]>([])
   const [selectedDay, setSelectedDay] = useState<ProcessedDay | null>(null)
   const [todayBSDay, setTodayBSDay] = useState<string | null>(null)
-  const [selectedYear, setSelectedYear] = useState("2081")
-  const [selectedMonth, setSelectedMonth] = useState("07")
+  const { currentYear, currentMonth } = getNepaliMonthAndYear()
+  // Use current Nepali date for initial year and month values
+  const [selectedYear, setSelectedYear] = useState(currentYear)
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth)
 
   useEffect(() => {
     const fetchCalendarData = async () => {
